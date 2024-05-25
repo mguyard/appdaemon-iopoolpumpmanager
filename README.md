@@ -228,7 +228,7 @@ __Parameters for slots are below :__
 > First time you run application in `Standard` mode, a new entity is create in your Home Assistant to store the calculated filtration duration : `sensor.pool_pump_calculated_duration`.
 > Calculated filtration duration is based on your iopool filtration recommandation and the min_duration and max_duration if configured.
 
-### Notifications
+### 📨 Notifications
 
 At the end of each boost or at the end of the last daily filtration slot, an __event is sent to Home Assistant__ with name `iopoolpumpmanager_event`.
 Two type of event exists :
@@ -272,7 +272,7 @@ context:
 
 Based on that, you can create some automations to exploit these events like to push a notification.
 
-### FAQ
+### 📝 FAQ
 
 <details closed>
     <summary>The iopool filtration recommendation may change during the day depending on the temperature. What happens if 2 slots overlap ?</summary>  
