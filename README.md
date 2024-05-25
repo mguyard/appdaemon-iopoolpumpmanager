@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./docs/logo.png" width="400" />
+  <img src="https://raw.githubusercontent.com/mguyard/appdaemon-iopoolpumpmanager/main/docs/logo.png" width="400" />
 </p>
 <p align="center">
     <h1 align="center">AppDaemon - iopool Pump Manager</h1>
