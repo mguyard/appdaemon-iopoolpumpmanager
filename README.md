@@ -34,14 +34,14 @@
 > - [🚀 Getting Started](#-getting-started)
 >   - [🔝 Requirements](#-requirements)
 >   - [⚙️ Installation](#️-installation)
-> - [🏷️ Configuration](#-configuration)
+> - [🏷️ Configuration](#%EF%B8%8F-configuration)
 >   - [🤖 AppDaemon](#-appdaemon)
->   - [🖇️ AppDaemon dependencies](#-appdaemon-dependencies)
+>   - [🖇️ AppDaemon dependencies](#%EF%B8%8F-appdaemon-dependencies)
 >   - [🛖 Home Assistant needed entities](#-home-assistant-needed-entities)
 >   - [💦 iopool Pump Manager](#-iopool-pump-manager)
 >   - [🧩 Parameters](#-parameters)
 >   - [📨 Notifications](#-notifications)
->   - [📝 FAQ](#-faq)
+>   - [❔ FAQ](#-faq)
 > - [🪲 Debug](#-debug)
 > - [🤝 Contributing](#-contributing)
 
@@ -228,7 +228,7 @@ __Parameters for slots are below :__
 > First time you run application in `Standard` mode, a new entity is create in your Home Assistant to store the calculated filtration duration : `sensor.pool_pump_calculated_duration`.
 > Calculated filtration duration is based on your iopool filtration recommandation and the min_duration and max_duration if configured.
 
-### Notifications
+### 📨 Notifications
 
 At the end of each boost or at the end of the last daily filtration slot, an __event is sent to Home Assistant__ with name `iopoolpumpmanager_event`.
 Two type of event exists :
@@ -272,7 +272,7 @@ context:
 
 Based on that, you can create some automations to exploit these events like to push a notification.
 
-### FAQ
+### ❔ FAQ
 
 <details closed>
     <summary>The iopool filtration recommendation may change during the day depending on the temperature. What happens if 2 slots overlap ?</summary>  
@@ -287,8 +287,7 @@ This means that the filtration time will be shorter than expected. For this reas
     <summary>If my pump has stopped during the day (for maintenance, for example), in the case of the overlapping time slots explained above, or the change in the iopool recommendation during the day, would I not have filtered enough during the day ?</summary>  
 
 _To manage this case, when the last slot is started, the application will calculate not the percentage of time defined in the configuration based on the calculated filtration time (iopool recommendation with min_duration and max_duration), but the remaining filtration time based on the filtration time calculated when the last slot was started._
-
-This ensures that all recommended filtration times are applied.
+_This ensures that all recommended filtration times are applied._
 </details>
 
 ## 🪲 Debug
