@@ -287,8 +287,7 @@ This means that the filtration time will be shorter than expected. For this reas
     <summary>If my pump has stopped during the day (for maintenance, for example), in the case of the overlapping time slots explained above, or the change in the iopool recommendation during the day, would I not have filtered enough during the day ?</summary>  
 
 _To manage this case, when the last slot is started, the application will calculate not the percentage of time defined in the configuration based on the calculated filtration time (iopool recommendation with min_duration and max_duration), but the remaining filtration time based on the filtration time calculated when the last slot was started._
-
-This ensures that all recommended filtration times are applied.
+_This ensures that all recommended filtration times are applied._
 </details>
 
 ## 🪲 Debug
