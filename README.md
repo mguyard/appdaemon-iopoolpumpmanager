@@ -41,7 +41,7 @@
 >   - [💦 iopool Pump Manager](#-iopool-pump-manager)
 >   - [🧩 Parameters](#-parameters)
 >   - [📨 Notifications](#-notifications)
->   - [📝 FAQ](#-faq)
+>   - [❔ FAQ](#-faq)
 > - [🪲 Debug](#-debug)
 > - [🤝 Contributing](#-contributing)
 
@@ -272,7 +272,7 @@ context:
 
 Based on that, you can create some automations to exploit these events like to push a notification.
 
-### 📝 FAQ
+### ❔ FAQ
 
 <details closed>
     <summary>The iopool filtration recommendation may change during the day depending on the temperature. What happens if 2 slots overlap ?</summary>  
