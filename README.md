@@ -74,7 +74,7 @@ iopool Pump Manager aims to provide an easy-to-use solution for managing your po
 
 ## 🚀 Getting Started
 
-__Reading documentation thru HACS can works as expected (links, etc..). In this case, please [read documentation on Github](https://github.com/mguyard/appdaemon-iopoolpumpmanager/blob/main/README.md)
+__Reading documentation thru HACS can works as expected (links, etc..). In this case, please [read documentation on Github](https://github.com/mguyard/appdaemon-iopoolpumpmanager/blob/main/README.md)__
 
 ### 🔝 Requirements
 
@@ -130,6 +130,7 @@ logs:
 > [!WARNING]
 > 
 > Starting with the AppDaemon v0.15.0 addon, configuration of AppDaemon was moved to /addon_configs folder. But [HACS still continue to download AppDaemon apps to /config (old folder)](https://github.com/hacs/integration/issues/3408).
+> 
 > To resolve this, we add `app_dir` directive in `appdaemon:` section to use HACS supported folder.
 > If you already have existing apps not coming from HACS, __I recommend to upload manually iopool Pump Manager in your actual app_dir or copying all your existing app before modifying app_dir directive__.
 
@@ -154,6 +155,7 @@ To do this, go to your AppDaemon add-on configuration and add `pydantic` in the 
 > `pydantic` should appear as a tag above the `package python` field.
 
 __And save in the bottom right of the Options section.__
+
 You will be able to see something like this in addon Logs :
 
 ```log
@@ -182,6 +184,7 @@ Successfully installed annotated-types-0.7.0 pydantic-2.7.1 pydantic-core-2.18.2
 ### 🛖 Home Assistant needed entities
 
 Follow this [guide](docs/iopool_entities.md) to create iopool entities.
+
 After that, we also need to create few entities required for the iopool Pump Manager by following this [guide](docs/iopoolPumpManager_entities.md)
 
 ### 💦 iopool Pump Manager

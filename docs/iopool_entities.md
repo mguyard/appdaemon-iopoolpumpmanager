@@ -371,11 +371,11 @@ cards:
     show_header_toggle: false
 ```
 
-![image of card](image.png)
+![example of card composition](dashboard_screenshot.png)
 
 Several types of cards are used and necessary to compose this card:
 
-- Mushroom
-- Vertical Stack in Card
-- Mini Graph Card
-- Pool Monitor Card
+- [Mushroom](https://github.com/piitaya/lovelace-mushroom)
+- [Vertical Stack in Card](https://github.com/ofekashery/vertical-stack-in-card)
+- [Mini Graph Card](https://github.com/kalkih/mini-graph-card)
+- [Pool Monitor Card](https://github.com/wilsto/pool-monitor-card)
