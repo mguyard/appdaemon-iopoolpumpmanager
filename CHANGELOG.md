@@ -5,6 +5,14 @@
 
 * set calculated duration also for active-winter mode ([8cb50f5](https://github.com/mguyard/appdaemon-iopoolpumpmanager/commit/8cb50f53f29107d14cbfaa47014320774822f35a))
 
+# 1.0.0 (2024-05-25)
+
+
+### Features
+
+
+* Initial version ([f79c7e7](https://github.com/mguyard/appdaemon-iopoolpumpmanager/commit/f79c7e767a9f97ef59f57833f352a13ba250a1c3))
+
 # 1.0.0-beta.1 (2024-05-25)
 
 
