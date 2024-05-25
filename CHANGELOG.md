@@ -1,3 +1,10 @@
+## [1.0.2-beta.1](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v1.0.1...v1.0.2-beta.1) (2024-05-25)
+
+
+### Bug Fixes
+
+* Updating doc for HACS ([fa8c487](https://github.com/mguyard/appdaemon-iopoolpumpmanager/commit/fa8c48767b639d9f1bbe78dbb0efbd9ad745dcd2))
+
 # [1.0.1](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v1.0.0...v1.0.1) (2024-05-25)
 
 
