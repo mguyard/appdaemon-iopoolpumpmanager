@@ -146,7 +146,7 @@ To do this, go to your AppDaemon add-on configuration and add `pydantic` in the 
 
 ### 🛖 Home Assistant needed entities
 
-Follow this [tutorial](docs/HOMEASSISTANT.md)
+Follow this [documentation](docs/HOMEASSISTANT.md)
 
 ### 💦 iopool Pump Manager
 
