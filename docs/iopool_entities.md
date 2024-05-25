@@ -29,7 +29,7 @@ homeassistant:
 
 If you already have a reference of this type in your configuration and understand it, you can skip to the next chapter (_but keep the associated directory in mind_).
 
-In this example, __packages will be different files__ in the `includes/packages` directory.
+In this example, __packages will be different files__ in the `includes/packages` directory. If this directory don't exist, please create it.
 
 Regarding the use of !include_dir_merge_named, I invite you to [learn more here](https://www.home-assistant.io/docs/configuration/splitting_configuration#advanced-usage).
 
@@ -120,7 +120,7 @@ iopool:
     - platform: rest
       unique_id: fabc1ee2-0bbe-416e-b23d-2474ac25fe4e
       name: iopool
-      resource: https://api.iopool.com/v1/pool/<votre_id_de_bassin_ici>
+      resource: https://api.iopool.com/v1/pool/<your pool id>
       value_template: "{{ value_json.title }}"
       json_attributes:
         - id
@@ -141,6 +141,10 @@ The sensor will be named `sensor.iopool` and its state will be the name of your 
 
 It will also contain several attributes that serve as data storage. I won't go into detail here, as these attributes are of little importance at this stage.
 
+> [!WARNING]
+>
+> Take attention to replace in `resource:` the end of URL with your pool id.
+
 ***
 
 Now that we've created the entity able to retrieve information from the iopool API, we need to create entities to store each piece of information separately, so that we can more easily exploit it later.
@@ -148,7 +152,7 @@ Now that we've created the entity able to retrieve information from the iopool A
 ```yaml
 template:
     - sensor:
-        - name: "temperature_iopool_piscine"
+        - name: "temperature_iopool_pool"
           unique_id: b336b008-dc88-4e3b-afd9-d662979fb0c1$
           state: "{{ state_attr('sensor.iopool', 'latestMeasure')['temperature'] | round(2) }}"
           device_class: temperature
@@ -160,7 +164,7 @@ template:
             isValid: "{{ state_attr('sensor.iopool', 'latestMeasure')['isValid'] }}"
             measuredAt: "{{ state_attr('sensor.iopool', 'latestMeasure')['measuredAt'] }}"
             
-        - name: "ph_iopool_piscine"
+        - name: "ph_iopool_pool"
           unique_id: f4804a67-1224-4507-a4fb-21d983958b7c
           state: "{{ state_attr('sensor.iopool', 'latestMeasure')['ph'] | round(1) }}"
           unit_of_measurement: "pH"
@@ -169,7 +173,7 @@ template:
             isValid: "{{ state_attr('sensor.iopool', 'latestMeasure')['isValid'] }}"
             measuredAt: "{{ state_attr('sensor.iopool', 'latestMeasure')['measuredAt'] }}"
             
-        - name: "orp_iopool_piscine"
+        - name: "orp_iopool_pool"
           unique_id: e0ef9122-c53a-41ae-be72-517f3fcbb443
           state: "{{ state_attr('sensor.iopool', 'latestMeasure')['orp'] | round(0) }}"
           unit_of_measurement: "mV"
@@ -178,20 +182,20 @@ template:
             isValid: "{{ state_attr('sensor.iopool', 'latestMeasure')['isValid'] }}"
             measuredAt: "{{ state_attr('sensor.iopool', 'latestMeasure')['measuredAt'] }}"
             
-        - name: "recommanded_filtration_iopool_piscine"
+        - name: "recommanded_filtration_iopool_pool"
           unique_id: f53659ba-922f-4861-9198-73a7dd43ae6a
           state: "{{ state_attr('sensor.iopool', 'advice')['filtrationDuration'] * 60 }}"
           device_class: duration
           unit_of_measurement: "min"
           icon: mdi:sun-clock-outline
           
-        - name: "mode_iopool_piscine"
+        - name: "mode_iopool_pool"
           unique_id: af6db587-be33-44e7-950c-fa52f0453d1f
           state: "{{ state_attr('sensor.iopool', 'mode') }}"
           icon: mdi:auto-mode
 
     - binary_sensor:
-        - name: "required_actions_iopool_piscine"
+        - name: "required_actions_iopool_pool"
           unique_id: fb6bb7e0-86ad-4f27-90ee-47c39db0ab12
           state: "{{ state_attr('sensor.iopool', 'hasAnActionRequired') }}"
           device_class: problem
@@ -204,21 +208,25 @@ template:
 
 As you can see, we use a template to collect the information presented in sensor.iopool and distribute it to different sensor and binary_sensor entities:
 
-- sensor.temperature_iopool_piscine
-- sensor.ph_iopool_piscine
-- sensor.orp_iopool_piscine
-- sensor.recommanded_filtration_iopool_piscine
-- sensor.mode_iopool_piscine
-- binary_sensor.required_actions_iopool_piscine
+- sensor.temperature_iopool_pool
+- sensor.ph_iopool_pool
+- sensor.orp_iopool_pool
+- sensor.recommanded_filtration_iopool_pool
+- sensor.mode_iopool_pool
+- binary_sensor.required_actions_iopool_pool
+
+__You can now verify and restart your Home Assistant configuration.__
+
+[![Open your Home Assistant instance and show your server controls.](https://my.home-assistant.io/badges/server_controls.svg)](https://my.home-assistant.io/redirect/server_controls/)
 
 As each entity has a unique_id, you can modify the entity name via the Home Assistant web interface to make it more comprehensible. I suggest the following names:
 
-- Swimming pool sensor temperature
-- pH Swimming pool probe
-- Disinfection capacity Piscine sensor
-- Recommendation Filtration time Swimming pool sensor
-- Swimming pool probe mode
-- Actions required Sonde Piscine
+- Pool temperature
+- pH pool
+- Disinfection capacity
+- Pool Recommanded Filtration Duration
+- Pool mode
+- Pool Actions required
 
 ## Full configuration file
 
@@ -228,7 +236,7 @@ iopool:
     - platform: rest
       unique_id: fabc1ee2-0bbe-416e-b23d-2474ac25fe4e
       name: iopool
-      resource: https://api.iopool.com/v1/pool/<votre_id_de_bassin_ici>
+      resource: https://api.iopool.com/v1/pool/<your_pool_id>
       value_template: "{{ value_json.title }}"
       json_attributes:
         - id
@@ -244,7 +252,7 @@ iopool:
       
   template:
     - sensor:
-        - name: "temperature_iopool_piscine"
+        - name: "temperature_iopool_pool"
           unique_id: b336b008-dc88-4e3b-afd9-d662979fb0c1$
           state: "{{ state_attr('sensor.iopool', 'latestMeasure')['temperature'] | round(2) }}"
           device_class: temperature
@@ -256,7 +264,7 @@ iopool:
             isValid: "{{ state_attr('sensor.iopool', 'latestMeasure')['isValid'] }}"
             measuredAt: "{{ state_attr('sensor.iopool', 'latestMeasure')['measuredAt'] }}"
             
-        - name: "ph_iopool_piscine"
+        - name: "ph_iopool_pool"
           unique_id: f4804a67-1224-4507-a4fb-21d983958b7c
           state: "{{ state_attr('sensor.iopool', 'latestMeasure')['ph'] | round(1) }}"
           unit_of_measurement: "pH"
@@ -265,7 +273,7 @@ iopool:
             isValid: "{{ state_attr('sensor.iopool', 'latestMeasure')['isValid'] }}"
             measuredAt: "{{ state_attr('sensor.iopool', 'latestMeasure')['measuredAt'] }}"
             
-        - name: "orp_iopool_piscine"
+        - name: "orp_iopool_pool"
           unique_id: e0ef9122-c53a-41ae-be72-517f3fcbb443
           state: "{{ state_attr('sensor.iopool', 'latestMeasure')['orp'] | round(0) }}"
           unit_of_measurement: "mV"
@@ -274,20 +282,20 @@ iopool:
             isValid: "{{ state_attr('sensor.iopool', 'latestMeasure')['isValid'] }}"
             measuredAt: "{{ state_attr('sensor.iopool', 'latestMeasure')['measuredAt'] }}"
             
-        - name: "recommanded_filtration_iopool_piscine"
+        - name: "recommanded_filtration_iopool_pool"
           unique_id: f53659ba-922f-4861-9198-73a7dd43ae6a
           state: "{{ state_attr('sensor.iopool', 'advice')['filtrationDuration'] * 60 }}"
           device_class: duration
           unit_of_measurement: "min"
           icon: mdi:sun-clock-outline
           
-        - name: "mode_iopool_piscine"
+        - name: "mode_iopool_pool"
           unique_id: af6db587-be33-44e7-950c-fa52f0453d1f
           state: "{{ state_attr('sensor.iopool', 'mode') }}"
           icon: mdi:auto-mode
 
     - binary_sensor:
-        - name: "required_actions_iopool_piscine"
+        - name: "required_actions_iopool_pool"
           unique_id: fb6bb7e0-86ad-4f27-90ee-47c39db0ab12
           state: "{{ state_attr('sensor.iopool', 'hasAnActionRequired') }}"
           device_class: problem
@@ -304,7 +312,7 @@ cards:
   - type: entities
     entities:
       - type: custom:mushroom-title-card
-        title: Piscine
+        title: pool
         alignment: center
         title_tap_action:
           action: none
@@ -314,23 +322,23 @@ cards:
         horizontal: true
         cards:
           - type: custom:mushroom-entity-card
-            entity: sensor.mode_iopool_piscine
+            entity: sensor.mode_iopool_pool
           - type: custom:mushroom-entity-card
-            entity: binary_sensor.required_actions_iopool_piscine
+            entity: binary_sensor.required_actions_iopool_pool
             name: Actions Requises
             icon_color: red
       - type: custom:vertical-stack-in-card
         cards:
           - type: conditional
             conditions:
-              - entity: sensor.mode_iopool_piscine
+              - entity: sensor.mode_iopool_pool
                 state: STANDARD
             card:
               type: custom:vertical-stack-in-card
               cards:
                 - type: custom:mini-graph-card
                   entities:
-                    - entity: sensor.temperature_iopool_piscine
+                    - entity: sensor.temperature_iopool_pool
                       name: Température iopool
                   hours_to_show: 96
                   animate: true
@@ -353,10 +361,10 @@ cards:
                     - value: 32
                       color: '#c0392b'
                 - type: custom:pool-monitor-card
-                  title: Données de piscine
-                  temperature: sensor.temperature_iopool_piscine
-                  ph: sensor.ph_iopool_piscine
-                  orp: sensor.orp_iopool_piscine
+                  title: Données de pool
+                  temperature: sensor.temperature_iopool_pool
+                  ph: sensor.ph_iopool_pool
+                  orp: sensor.orp_iopool_pool
                   show_labels: true
                   language: fr
     state_color: false
