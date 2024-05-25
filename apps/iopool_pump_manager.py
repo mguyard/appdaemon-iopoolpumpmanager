@@ -8,6 +8,7 @@ from pydantic import ValidationError
 
 """
 Author : Marc Guyard
+
 Doc : https://github.com/mguyard/appdaemon-iopoolpumpmanager/blob/main/README.md
 Bug Report : https://github.com/mguyard/appdaemon-iopoolpumpmanager/issues/new?assignees=&labels=Bug&projects=&template=bug_report.yml
 Feature Request : https://github.com/mguyard/appdaemon-iopoolpumpmanager/issues/new?assignees=&labels=Feature+Request&projects=&template=feature_request.yml
@@ -118,6 +119,8 @@ class iopoolPumpManager(hass.Hass):
                         config=config,
                         latest=True,
                     )
+                    # Calcul and set the calculated duration for the day
+                    self._get_standard_day_filtration_duration(config=config)
                 case "passive-winter":
                     self.log("Pool is in passive mode. No action will be executed.", level="INFO")
 
@@ -715,7 +718,7 @@ class iopoolPumpManager(hass.Hass):
                 self._stop_pump(config=kwargs["config"])
         else:
             boost_duration_hour = int("".join(filter(str.isdigit, new)))
-            boost_duration_timer = boost_duration_hour * 60
+            boost_duration_timer = boost_duration_hour * 3600
             self.call_service(
                 service="timer/start", entity_id=kwargs["config"].boost.timer, duration=boost_duration_timer
             )
@@ -747,7 +750,6 @@ class iopoolPumpManager(hass.Hass):
             none_option = "None"
         self.select_option(entity_id=kwargs["config"].boost.selector, option=none_option)
         # Fire event
-        # TODO : Tester si ca fonctionne bien
         self._fire_event(
             event_name="iopoolpumpmanager_event",
             type="end_boost",
