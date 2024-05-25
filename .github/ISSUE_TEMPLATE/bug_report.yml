@@ -111,9 +111,9 @@ body:
     validations:
       required: true
     attributes:
-      label: PoolPumpManager Log
+      label: iopoolPumpManager Log
       description: >
-        Copy and paste the relevant parts of the CoverManager App log (PoolPumpManager.log) here.
+        Copy and paste the relevant parts of the CoverManager App log (iopoolPumpManager.log) here.
         Before providing the log, please make sure that :
           - you have enabled the [debug mode](https://appdaemon.readthedocs.io/en/latest/APPGUIDE.html#writing-to-logfiles) in the configuration file (log_level: DEBUG)
           - you have removed any sensitive information.
@@ -137,6 +137,6 @@ body:
           required: true
         - label: This issue only contains 1 issue (if you have multiple issues, open one issue for each issue).
           required: true
-        - label: This issue is not a duplicate issue of currently [previous issues](https://github.com/mguyard/appdaemon-poolpumpmanager/labels/bug)..
+        - label: This issue is not a duplicate issue of currently [previous issues](https://github.com/mguyard/appdaemon-iopoolpumpmanager/labels/bug)..
           required: true
   
