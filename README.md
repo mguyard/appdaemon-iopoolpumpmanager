@@ -74,6 +74,8 @@ iopool Pump Manager aims to provide an easy-to-use solution for managing your po
 
 ## 🚀 Getting Started
 
+__Reading documentation thru HACS can works as expected (links, etc..). In this case, please [read documentation on Github](https://github.com/mguyard/appdaemon-iopoolpumpmanager/blob/main/README.md)
+
 ### 🔝 Requirements
 
 - A valid and functional deployment of [`AppDaemon Addon` connected to Home Assistant](https://community.home-assistant.io/t/home-assistant-community-add-on-appdaemon-4/163259)
@@ -104,6 +106,7 @@ Please find below an example of basic configuration (It may need to be adapted t
 ---
 secrets: /homeassistant/secrets.yaml
 appdaemon:
+  app_dir: /homeassistant/appdaemon/apps
   latitude: 48.80506979319244
   longitude: 2.12031248278925
   elevation: 130
@@ -124,15 +127,23 @@ logs:
     filename: /config/logs/error.log
 ```
 
-Add in logs part the log for iopool Pump Manager :
+> [!WARNING]
+> 
+> Starting with the AppDaemon v0.15.0 addon, configuration of AppDaemon was moved to /addon_configs folder. But [HACS still continue to download AppDaemon apps to /config (old folder)](https://github.com/hacs/integration/issues/3408).
+> To resolve this, we add `app_dir` directive in `appdaemon:` section to use HACS supported folder.
+> If you already have existing apps not coming from HACS, __I recommend to upload manually iopool Pump Manager in your actual app_dir or copying all your existing app before modifying app_dir directive__.
+
+Create folder logs (if not already exist) in `/add_config/<guid>_appdaemon/` and add in `appdaemon.yaml` logs section, the log for iopool Pump Manager :
 
 ```yaml
 logs:
     [...]
     iopoolPumpManager:
         name: iopoolPumpManager
-        filename: /conf/logs/iopoolPumpManager.log
+        filename: /config/logs/iopoolPumpManager.log
 ```
+
+Following the configuration change, you need to restart your AppDaemon addon.
 
 ### 🖇️ AppDaemon dependencies
 
@@ -142,11 +153,36 @@ To do this, go to your AppDaemon add-on configuration and add `pydantic` in the 
 
 > `pydantic` should appear as a tag above the `package python` field.
 
-[![Open your Home Assistant instance and show the dashboard of an add-on.](https://my.home-assistant.io/badges/supervisor_addon.svg)](https://my.home-assistant.io/redirect/supervisor_addon/?addon=a0d7b954_appdaemon)
+__And save in the bottom right of the Options section.__
+You will be able to see something like this in addon Logs :
+
+```log
+s6-rc: info: service legacy-cont-init: starting
+s6-rc: info: service legacy-cont-init successfully started
+s6-rc: info: service init-appdaemon: starting
+Looking in indexes: https://pypi.org/simple, https://wheels.home-assistant.io/musllinux-index/
+Collecting pydantic
+  Downloading pydantic-2.7.1-py3-none-any.whl.metadata (107 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 107.3/107.3 kB 8.1 MB/s eta 0:00:00
+Collecting annotated-types>=0.4.0 (from pydantic)
+  Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.18.2 (from pydantic)
+  Downloading pydantic_core-2.18.2-cp311-cp311-musllinux_1_1_x86_64.whl.metadata (6.5 kB)
+Collecting typing-extensions>=4.6.1 (from pydantic)
+  Downloading https://wheels.home-assistant.io/musllinux-index/typing_extensions-4.12.0-py3-none-any.whl (37 kB)
+Downloading pydantic-2.7.1-py3-none-any.whl (409 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 409.3/409.3 kB 21.5 MB/s eta 0:00:00
+Downloading pydantic_core-2.18.2-cp311-cp311-musllinux_1_1_x86_64.whl (2.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 34.5 MB/s eta 0:00:00
+Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+Installing collected packages: typing-extensions, annotated-types, pydantic-core, pydantic
+Successfully installed annotated-types-0.7.0 pydantic-2.7.1 pydantic-core-2.18.2 typing-extensions-4.12.0
+```
 
 ### 🛖 Home Assistant needed entities
 
-Follow this [documentation](docs/HOMEASSISTANT.md)
+Follow this [guide](docs/iopool_entities.md) to create iopool entities.
+After that, we also need to create few entities required for the iopool Pump Manager by following this [guide](docs/iopoolPumpManager_entities.md)
 
 ### 💦 iopool Pump Manager
 
