@@ -1,3 +1,10 @@
+## [1.0.5-beta.1](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v1.0.4...v1.0.5-beta.1) (2024-06-05)
+
+
+### Bug Fixes
+
+* Resolve issue with config.filtration_summer.max_duration that was required but it's an optional configuration ([1ae2edb](https://github.com/mguyard/appdaemon-iopoolpumpmanager/commit/1ae2edb95eebefbd02f676bf9a01b4f542614d66))
+
 ## [1.0.4](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v1.0.3...v1.0.4) (2024-06-05)
 
 
