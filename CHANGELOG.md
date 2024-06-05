@@ -1,3 +1,10 @@
+## [1.0.6-beta.1](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v1.0.5...v1.0.6-beta.1) (2024-06-05)
+
+
+### Bug Fixes
+
+* Change module name to avoid collision with my others apps ([bf285c3](https://github.com/mguyard/appdaemon-iopoolpumpmanager/commit/bf285c3745cda35fab56e982286842771a46cb9b))
+
 ## [1.0.5](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v1.0.4...v1.0.5) (2024-06-05)
 
 

@@ -2,8 +2,8 @@ import re
 from datetime import datetime, timedelta
 
 import hassapi as hass
-import src.config_validator as ConfigValidator
-import src.constants as Constants
+import iopoolPumpManagerLibs.config_validator as ConfigValidator
+import iopoolPumpManagerLibs.constants as Constants
 from pydantic import ValidationError
 
 """
