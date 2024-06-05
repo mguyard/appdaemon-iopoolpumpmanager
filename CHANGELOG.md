@@ -1,3 +1,10 @@
+## [1.0.4-beta.1](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v1.0.3...v1.0.4-beta.1) (2024-06-05)
+
+
+### Bug Fixes
+
+* Change appdaemon main folder name to match HACS requirements ([f8c8861](https://github.com/mguyard/appdaemon-iopoolpumpmanager/commit/f8c8861e01e799c8f396aa0dac81d614b4e8bfff))
+
 ## [1.0.3](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v1.0.2...v1.0.3) (2024-06-05)
 
 
