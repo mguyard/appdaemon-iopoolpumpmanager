@@ -12,7 +12,7 @@ from pydantic import (
 from pydantic.functional_validators import AfterValidator
 from typing_extensions import Annotated, Self
 
-import src.utils as Utils
+import iopoolPumpManagerLibs.utils as Utils
 
 
 class SlotConfig(BaseModel):
