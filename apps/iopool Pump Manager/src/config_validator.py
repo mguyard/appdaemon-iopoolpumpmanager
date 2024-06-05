@@ -29,7 +29,7 @@ class FiltrationSummerConfig(BaseModel):
     recommanded_duration: Annotated[str, AfterValidator(Utils.isSensorEntityFormat)]
     elapsed_today: Annotated[str, AfterValidator(Utils.isSensorEntityFormat)]
     min_duration: PositiveInt | None = None
-    max_duration: PositiveInt = Field(lt=1440)
+    max_duration: PositiveInt = Field(lt=1440, default=None)
     slots: SlotName
 
     @model_validator(mode="after")
