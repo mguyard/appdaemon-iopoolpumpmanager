@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v1.0.2...v1.0.3) (2024-06-05)
+
+
+### Bug Fixes
+
+* Change appdaemon repository structure to match HACS requirements ([124f34e](https://github.com/mguyard/appdaemon-iopoolpumpmanager/commit/124f34e923e3e53bf1e98323b54fefd86ac82b75))
+
 ## [1.0.3-beta.1](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v1.0.2...v1.0.3-beta.1) (2024-06-05)
 
 
