@@ -11,6 +11,7 @@ iopoolpumpmanager:
   sensor:
     - platform: history_stats
       name: pool_elapsed_filtration_duration
+      unique_id: 4d0b5749-d6f8-4d79-a9b1-5f542ad0b4b0
       entity_id: switch.pool_switch
       state: "on"
       type: time
