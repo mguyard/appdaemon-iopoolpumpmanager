@@ -654,13 +654,12 @@ class iopoolPumpManager(hass.Hass):
             None
         """
         self._stop_pump(config=kwargs["config"])
-        # TODO : Tester si ca fonctionne bien
         if kwargs["latest"]:
             event_name = "iopoolpumpmanager_event"
             event_type = "end_filtration"
             event_data = {
                 "elapsed_min": int(
-                    float(self.get_state(entity_id=kwargs["config"].filtration_summer.elapsed_today)) * 60
+                    round(float(self.get_state(entity_id=kwargs["config"].filtration_summer.elapsed_today)), 2) * 60
                 ),
                 "required_min": int(self.get_state(entity_id=Constants.CALCULATED_DURATION_ENTITY)),
                 "end_at": datetime.now().astimezone().isoformat(),
