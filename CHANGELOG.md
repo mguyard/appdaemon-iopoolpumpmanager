@@ -1,3 +1,10 @@
+## [1.0.7-beta.1](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v1.0.6...v1.0.7-beta.1) (2024-06-12)
+
+
+### Bug Fixes
+
+* Round elapsed time to the nearest minute in end_filtration event ([3167126](https://github.com/mguyard/appdaemon-iopoolpumpmanager/commit/31671262416e9361df5067adf8efdaa95e840198))
+
 ## [1.0.6](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v1.0.5...v1.0.6) (2024-06-05)
 
 
