@@ -310,6 +310,7 @@ context:
 ```
 
 Based on that, you can create some automations to exploit these events like to push a notification.
+Please find an [automation example here](docs/automations.md)
 
 ### ❔ FAQ
 
