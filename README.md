@@ -203,7 +203,7 @@ iopoolPumpManager:
       pump_switch: switch.pool_switch
       filtration_mode: input_select.pool_mode
       filtration_summer:
-        recommanded_duration: sensor.iopool_recommanded_filtration_duration
+        recommanded_duration: sensor.recommanded_filtration_iopool_pool
         elapsed_today: sensor.pool_elapsed_filtration_duration
         min_duration: 240
         max_duration: 480
@@ -310,6 +310,7 @@ context:
 ```
 
 Based on that, you can create some automations to exploit these events like to push a notification.
+Please find an [automation example here](docs/automations.md)
 
 ### ❔ FAQ
 
