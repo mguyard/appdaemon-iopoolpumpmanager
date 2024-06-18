@@ -1,3 +1,11 @@
+# [2.0.0-beta.2](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2024-06-18)
+
+
+### Bug Fixes
+
+* Update recommended filtration duration entity with source = AD-iopoolPumpManager ([7c8e632](https://github.com/mguyard/appdaemon-iopoolpumpmanager/commit/7c8e6324c3b8efbbf51e83c2ce6a1db5f9c30776))
+* Update recommended filtration duration entity with source = AD-iopoolPumpManager ([23451e2](https://github.com/mguyard/appdaemon-iopoolpumpmanager/commit/23451e23e16712f60045dada3b0a7a5a49c4662c))
+
 # [2.0.0-beta.1](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v1.0.7...v2.0.0-beta.1) (2024-06-18)
 
 
