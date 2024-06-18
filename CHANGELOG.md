@@ -1,3 +1,15 @@
+# [2.0.0-beta.1](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v1.0.7...v2.0.0-beta.1) (2024-06-18)
+
+
+### Features
+
+* Adding configuration parameter pool_name when using multiple pool ([506a79c](https://github.com/mguyard/appdaemon-iopoolpumpmanager/commit/506a79c9765c9591c7d1fcf09eb86f04dd55a047))
+
+
+### BREAKING CHANGES
+
+* You need to stop AppDaemon addon, restart Home Assistant and start AppDaemon addon to recreate the calculated filtration duration entity
+
 ## [1.0.7](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v1.0.6...v1.0.7) (2024-06-16)
 
 
