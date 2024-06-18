@@ -194,7 +194,7 @@ To configure iopool Pump Manager app you need to edit `apps.yaml` configuration 
 Please find below an complete example of configuration to add in file :
 
 ```yaml
-iopoolPumpManager:
+pool1:
     module: iopool_pump_manager
     class: iopoolPumpManager
     use_dictionary_unpacking: true
@@ -235,6 +235,7 @@ __Please find below all configuration parameters who don't apply to slots direct
 |-------------------|----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------|---------|------------------------------|-----------|
 | -                 | dryrun               | Enable a dryrun mode that don't execute open or close functions                                                                                                                   | config.dryrun                                 | False   | Boolean                      | Optional  |
 | -                 | pump_switch          | Switch entity of your pump                                                                                                                                                        | config.pump_switch                            |         | Switch Entity                | Required  |
+| -                 | pool_name            | A string to identify the pool. Useful only when you have multiple pool (multiple iopoolPumpManager apps)                                                                          | config.pool_name                              |         | String                       | Optional  |
 | -                 | filtration_mode      | Input Select Entity with these options: Standard, Active-Winter, Passive-Winter                                                                                                   | config.filtration_mode                        |         | Input_select Entity          | Required  |
 | filtration_summer | recommanded_duration | Sensor coming from iopool API providing a recommanded filtration duration                                                                                                         | config.filtration_summer.recommanded_duration |         | Sensor Entity                | Required  |
 | filtration_summer | elapsed_today        | History_stats Sensor Entity providing how many hours pump has run today                                                                                                           | config.filtration_summer.elapsed_today        |         | Sensor Entity                | Required  |
@@ -265,6 +266,7 @@ __Parameters for slots are below :__
 > Saving configuration reload automatically application and apply your need configuration.
 >
 > First time you run application in `Standard` mode, a new entity is create in your Home Assistant to store the calculated filtration duration : `sensor.pool_pump_calculated_duration`.
+> If you have specify a pool_name, entity `sensor.<pool_name>_pump_calculated_duration` will be create instead. 
 > Calculated filtration duration is based on your iopool filtration recommandation and the min_duration and max_duration if configured.
 
 ### 📨 Notifications
@@ -336,7 +338,7 @@ To help to debug and understand an issue, you can enable the debug mode in app.
 For this, edit the app configuration and set `log_level` to DEBUG
 
 ```yaml
-iopoolPumpManager:
+pool1:
     [...]
     log: iopoolPumpManager
     log_level: DEBUG    <---- HERE

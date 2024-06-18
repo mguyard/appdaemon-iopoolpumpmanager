@@ -17,6 +17,20 @@ Feature Request : https://github.com/mguyard/appdaemon-iopoolpumpmanager/issues/
 
 class iopoolPumpManager(hass.Hass):
     def initialize(self):
+        """
+        Initializes the pump manager.
+
+        This method is called when the app is initialized. It performs the following tasks:
+        - Validates the configuration.
+        - Verifies the entities.
+        - Sets up the filtration slots and handlers.
+        - Listens for changes in the boost selector and boost timer.
+        - Listens for changes in the pool mode.
+
+        Raises:
+            RuntimeError: If the configuration is invalid.
+
+        """
         config = None
         try:
             config = ConfigValidator.Config(**self.args["config"])
@@ -129,7 +143,32 @@ class iopoolPumpManager(hass.Hass):
 
         self.log(f"{self.name} fully Initialized !", level="INFO")
 
+    def _get_calculated_duration_entity(self, poolname: str | None) -> str:
+        """
+        Returns the entity name for the calculated duration of the pump.
+
+        Parameters:
+        - poolname (str|None): The name of the pool. If provided, the entity name will be based on the pool name.
+                               If None, the default entity name will be used.
+
+        Returns:
+        - str: The entity name for the calculated duration of the pump.
+        """
+        if poolname is not None:
+            return f"sensor.{poolname}_pump_calculated_duration"
+        else:
+            return Constants.CALCULATED_DURATION_ENTITY
+
     def _verify_entities(self, config: ConfigValidator.Config) -> None:
+        """
+        Verifies the existence and validity of entities defined in the configuration.
+
+        Args:
+            config (ConfigValidator.Config): The configuration object.
+
+        Raises:
+            RuntimeError: If an entity defined in the configuration does not exist or is invalid.
+        """
         entities_dict = {
             "config.pump_switch": (config.pump_switch if config.pump_switch is not None else None),
             "config.filtration_mode": (config.filtration_mode if config.filtration_mode is not None else None),
@@ -204,47 +243,49 @@ class iopoolPumpManager(hass.Hass):
                         )
 
             # Create entity for filtration duration calculated
+            CALCULATED_DURATION_ENTITY = self._get_calculated_duration_entity(poolname=config.pool_name)
             filtration_calculated_attribute = {
-                "friendly_name": "Calculated filtration duration",
+                "friendly_name": (f"{config.pool_name.capitalize()} " if config.pool_name is not None else "")
+                + "Calculated filtration duration",
                 "device_class": "duration",
                 "unit_of_measurement": "h",
                 "icon": "mdi:clock-outline",
-                "source": "AD-" + self.name,
+                "source": "AD-IopoolPumpManager-" + self.name,
                 "config-version": Constants.CONFIG_VERSION,
             }
-            if self.get_state(entity_id=Constants.CALCULATED_DURATION_ENTITY) is None:
-                self.log(f"Create entity {Constants.CALCULATED_DURATION_ENTITY} for storage", level="DEBUG")
+            if self.get_state(entity_id=CALCULATED_DURATION_ENTITY) is None:
+                self.log(f"Create entity {CALCULATED_DURATION_ENTITY} for storage", level="DEBUG")
                 self.set_state(
-                    entity_id=Constants.CALCULATED_DURATION_ENTITY,
+                    entity_id=CALCULATED_DURATION_ENTITY,
                     state=0,
                     attributes=filtration_calculated_attribute,
                 )
             else:
                 # If entity already exists, check if it's managed by the current app
                 if (
-                    self.get_state(entity_id=Constants.CALCULATED_DURATION_ENTITY, attribute="source")
-                    != "AD-" + self.name
+                    self.get_state(entity_id=CALCULATED_DURATION_ENTITY, attribute="source")
+                    != "AD-IopoolPumpManager-" + self.name
                 ):
                     raise RuntimeError(
-                        f"Entity {Constants.CALCULATED_DURATION_ENTITY} already exists and "
-                        f"is not managed by {self.name}. Please check your configuration."
+                        f"Entity {CALCULATED_DURATION_ENTITY} already exists and "
+                        f"is not managed by {self.name} application. Please check your configuration."
                     )
                 # If entity already exists and is managed by the current app
                 # check if the configuration version is up to date
                 else:
                     if (
-                        self.get_state(entity_id=Constants.CALCULATED_DURATION_ENTITY, attribute="config-version")
+                        self.get_state(entity_id=CALCULATED_DURATION_ENTITY, attribute="config-version")
                         != Constants.CONFIG_VERSION
                     ):
                         self.log(
-                            f"Entity {Constants.CALCULATED_DURATION_ENTITY} has an old configuration version. "
+                            f"Entity {CALCULATED_DURATION_ENTITY} has an old configuration version. "
                             f"Current version : {Constants.CONFIG_VERSION}. Updating entity...",
                             level="INFO",
                         )
                         # Update entity with new configuration
                         self.set_state(
-                            entity_id=Constants.CALCULATED_DURATION_ENTITY,
-                            state=self.get_state(entity_id=Constants.CALCULATED_DURATION_ENTITY),
+                            entity_id=CALCULATED_DURATION_ENTITY,
+                            state=self.get_state(entity_id=CALCULATED_DURATION_ENTITY),
                             attributes=filtration_calculated_attribute,
                         )
 
@@ -371,7 +412,7 @@ class iopoolPumpManager(hass.Hass):
 
         self.log(f"Calculated duration for the day : {duration} min", level="INFO")
         # Set the calculated duration in the entity
-        self.set_state(entity_id=Constants.CALCULATED_DURATION_ENTITY, state=duration)
+        self.set_state(entity_id=self._get_calculated_duration_entity(poolname=config.pool_name), state=duration)
         return duration
 
     def _get_slot_duration(
@@ -660,7 +701,9 @@ class iopoolPumpManager(hass.Hass):
                 "elapsed_min": int(
                     round(float(self.get_state(entity_id=kwargs["config"].filtration_summer.elapsed_today)), 2) * 60
                 ),
-                "required_min": int(self.get_state(entity_id=Constants.CALCULATED_DURATION_ENTITY)),
+                "required_min": int(
+                    self.get_state(entity_id=self._get_calculated_duration_entity(poolname=kwargs["config"].pool_name))
+                ),
                 "end_at": datetime.now().astimezone().isoformat(),
                 "boost_in_progress": self._is_boost_in_progress(config=kwargs["config"]),
             }
