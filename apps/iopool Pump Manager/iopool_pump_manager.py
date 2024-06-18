@@ -250,7 +250,7 @@ class iopoolPumpManager(hass.Hass):
                 "device_class": "duration",
                 "unit_of_measurement": "h",
                 "icon": "mdi:clock-outline",
-                "source": "AD-IopoolPumpManager-" + self.name,
+                "source": "AD-iopoolPumpManager",
                 "config-version": Constants.CONFIG_VERSION,
             }
             if self.get_state(entity_id=CALCULATED_DURATION_ENTITY) is None:
@@ -262,13 +262,10 @@ class iopoolPumpManager(hass.Hass):
                 )
             else:
                 # If entity already exists, check if it's managed by the current app
-                if (
-                    self.get_state(entity_id=CALCULATED_DURATION_ENTITY, attribute="source")
-                    != "AD-IopoolPumpManager-" + self.name
-                ):
+                if self.get_state(entity_id=CALCULATED_DURATION_ENTITY, attribute="source") != "AD-iopoolPumpManager":
                     raise RuntimeError(
                         f"Entity {CALCULATED_DURATION_ENTITY} already exists and "
-                        f"is not managed by {self.name} application. Please check your configuration."
+                        f"is not managed by AD-iopoolPumpManager application. Please check your configuration."
                     )
                 # If entity already exists and is managed by the current app
                 # check if the configuration version is up to date
