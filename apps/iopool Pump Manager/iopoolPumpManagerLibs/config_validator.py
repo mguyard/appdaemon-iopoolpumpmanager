@@ -60,6 +60,7 @@ class BoostConfig(BaseModel):
 class Config(BaseModel):
     dryrun: bool = False
     pump_switch: Annotated[str, AfterValidator(Utils.isSwitchEntityFormat)]
+    pool_name: str | None = None
     filtration_mode: Annotated[str, AfterValidator(Utils.isInputSelectEntityFormat)]
     filtration_summer: FiltrationSummerConfig
     filtration_winter: FiltrationWinterConfig = FiltrationWinterConfig()
