@@ -14,7 +14,7 @@
 
 ### BREAKING CHANGES
 
-* You need to stop AppDaemon addon, restart Home Assistant and start AppDaemon addon to recreate the calculated filtration duration entity
+* You need to update iopool Pump Manager, stop AppDaemon addon, restart Home Assistant and start AppDaemon addon to recreate the calculated filtration duration entity
 
 # [2.0.0-beta.2](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2024-06-18)
 
