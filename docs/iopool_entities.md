@@ -307,75 +307,797 @@ iopool:
 Here's an example of a map showing the status of your pool using iopool data:
 
 ```yaml
-type: horizontal-stack
+type: vertical-stack
 cards:
-  - type: entities
-    entities:
-      - type: custom:mushroom-title-card
-        title: pool
-        alignment: center
-        title_tap_action:
-          action: none
-        subtitle_tap_action:
-          action: none
-      - type: custom:vertical-stack-in-card
-        horizontal: true
-        cards:
-          - type: custom:mushroom-entity-card
-            entity: sensor.mode_iopool_pool
-          - type: custom:mushroom-entity-card
-            entity: binary_sensor.required_actions_iopool_pool
-            name: Actions Requises
-            icon_color: red
-      - type: custom:vertical-stack-in-card
-        cards:
-          - type: conditional
-            conditions:
-              - entity: sensor.mode_iopool_pool
-                state: STANDARD
+  - type: custom:mushroom-title-card
+    title: Piscine
+    subtitle: '{{ states(''sensor.iopool'') }}'
+    alignment: center
+    title_tap_action:
+      action: none
+    subtitle_tap_action:
+      action: none
+  - type: grid
+    square: false
+    cards:
+      - type: custom:button-card
+        name: Mode de la sonde
+        icon: mdi:pool
+        entity: sensor.mode_iopool_pool
+        show_state: true
+        state:
+          - operator: '=='
+            value: STANDARD
+            styles:
+              img_cell:
+                - background: var(--green)
+          - operator: regex
+            value: (ACTIVE_)?WINTER
+            icon: mdi:snowflake
+            styles:
+              img_cell:
+                - background: var(--blue-tint)
+        styles:
+          grid:
+            - grid-template-areas: '"n btn" "s btn" "i btn"'
+            - grid-template-columns: 1fr min-content
+            - grid-template-rows: min-content min-content 1fr
+          img_cell:
+            - justify-content: start
+            - position: absolute
+            - width: 130px
+            - height: 130px
+            - left: 0
+            - bottom: 0
+            - margin: 0 0 -30px -30px
+            - background: var(--blue)
+            - border-radius: 200px
+          icon:
+            - width: 60px
+            - left: 35px
+            - color: contrast20
+            - opacity: '0.6'
+          card:
+            - height: 100%
+            - padding: 22px 8px 22px 22px
+          name:
+            - justify-self: start
+            - align-self: start
+            - font-size: 16px
+            - font-weight: 500
+            - color: contrast20
+          state:
+            - min-height: 80px
+            - justify-self: start
+            - align-self: start
+            - font-size: 14px
+            - opacity: '0.7'
+      - type: custom:button-card
+        name: Actions Requises
+        icon: mdi:emoticon-cool-outline
+        entity: binary_sensor.required_actions_iopool_pool
+        show_state: true
+        state:
+          - value: 'off'
+            styles:
+              img_cell:
+                - background: var(--green)
+          - value: 'on'
+            icon: mdi:exclamation
+            styles:
+              img_cell:
+                - background: var(--red)
+        styles:
+          grid:
+            - grid-template-areas: '"n btn" "s btn" "i btn"'
+            - grid-template-columns: 1fr min-content
+            - grid-template-rows: min-content min-content 1fr
+          img_cell:
+            - justify-content: start
+            - position: absolute
+            - width: 130px
+            - height: 130px
+            - left: 0
+            - bottom: 0
+            - margin: 0 0 -30px -30px
+            - background: var(--blue)
+            - border-radius: 200px
+          icon:
+            - width: 60px
+            - left: 35px
+            - color: contrast20
+            - opacity: '0.6'
+          card:
+            - height: 100%
+            - padding: 22px 8px 22px 22px
+          name:
+            - justify-self: start
+            - align-self: start
+            - font-size: 16px
+            - font-weight: 500
+            - color: contrast20
+          state:
+            - min-height: 80px
+            - justify-self: start
+            - align-self: start
+            - font-size: 14px
+            - opacity: '0.7'
+    columns: 2
+  - type: grid
+    square: false
+    cards:
+      - type: custom:button-card
+        name: Filtration
+        icon: mdi:water-boiler
+        entity: input_select.pool_mode
+        show_state: true
+        custom_fields:
+          btn:
             card:
-              type: custom:vertical-stack-in-card
-              cards:
-                - type: custom:mini-graph-card
-                  entities:
-                    - entity: sensor.temperature_iopool_pool
-                      name: Température iopool
-                  hours_to_show: 96
-                  animate: true
-                  line_width: 5
-                  group_by: hour
-                  state_adaptive_color: true
-                  hour24: true
-                  decimals: 1
-                  show:
-                    extrema: true
-                    average: true
-                    labels: false
-                  color_thresholds:
-                    - value: 20
-                      color: '#44739e'
-                    - value: 24
-                      color: '#12f33f'
-                    - value: 30
-                      color: '#f39c12'
-                    - value: 32
-                      color: '#c0392b'
-                - type: custom:pool-monitor-card
-                  title: Données de pool
-                  temperature: sensor.temperature_iopool_pool
-                  ph: sensor.ph_iopool_pool
-                  orp: sensor.orp_iopool_pool
-                  show_labels: true
-                  language: fr
-    state_color: false
-    show_header_toggle: false
+              type: custom:mushroom-chips-card
+              chips:
+                - type: template
+                  tap_action:
+                    action: call-service
+                    service: input_select.select_option
+                    target:
+                      entity_id: input_select.pool_mode
+                    data:
+                      option: Standard
+                  hold_action:
+                    action: none
+                  double_tap_action:
+                    action: none
+                  icon: mdi:white-balance-sunny
+                  entity: input_select.pool_mode
+                  card_mod:
+                    style: |
+                      ha-card {
+                        --chip-background: {{ 'var(--green)' if is_state('input_select.pool_mode', 'Standard') else 'var(--contrast4)' }};
+                        padding: 5px!important;
+                        border-radius: 100px!important;
+                      }
+                      ha-card::after {
+                        content: "Standard";
+                        position: absolute;
+                        bottom: 10%;
+                        left: 10%;
+                        transform: translateX(-100%);
+                        background-color: var(--contrast1);
+                        color: var(--contrast10);
+                        font-size: 14px;
+                        padding: 5px;
+                        border-radius: 3px;
+                        white-space: nowrap;
+                        display: none;
+                      }
+                      ha-card:hover::after {
+                        display: block;
+                      }
+                - type: template
+                  tap_action:
+                    action: call-service
+                    service: input_select.select_option
+                    target:
+                      entity_id: input_select.pool_mode
+                    data:
+                      option: Active-Winter
+                  hold_action:
+                    action: none
+                  double_tap_action:
+                    action: none
+                  icon: mdi:sun-snowflake
+                  entity: input_select.pool_mode
+                  card_mod:
+                    style: |
+                      ha-card {
+                        --chip-background: {{ 'var(--green)' if is_state('input_select.pool_mode', 'Active-Winter') else 'var(--contrast4)' }};
+                        padding: 5px!important;
+                        border-radius: 100px!important;
+                      }
+                      ha-card::after {
+                        content: "Active-Winter";
+                        position: absolute;
+                        bottom: 10%;
+                        left: 10%;
+                        transform: translateX(-100%);
+                        background-color: var(--contrast1);
+                        color: var(--contrast10);
+                        font-size: 14px;
+                        padding: 5px;
+                        border-radius: 3px;
+                        white-space: nowrap;
+                        display: none;
+                      }
+                      ha-card:hover::after {
+                        display: block;
+                      }
+                - type: template
+                  tap_action:
+                    action: call-service
+                    service: input_select.select_option
+                    target:
+                      entity_id: input_select.pool_mode
+                    data:
+                      option: Passive-Winter
+                  hold_action:
+                    action: none
+                  double_tap_action:
+                    action: none
+                  icon: mdi:snowflake
+                  entity: input_select.pool_mode
+                  card_mod:
+                    style: |
+                      ha-card {
+                        --chip-background: {{ 'var(--green)' if is_state('input_select.pool_mode', 'Passive-Winter') else 'var(--contrast4)' }};
+                        padding: 5px!important;
+                        border-radius: 100px!important;
+                      }
+                      ha-card::after {
+                        content: "Passive-Winter";
+                        position: absolute;
+                        bottom: 10%;
+                        left: 10%;
+                        transform: translateX(-100%);
+                        background-color: var(--contrast1);
+                        color: var(--contrast10);
+                        font-size: 14px;
+                        padding: 5px;
+                        border-radius: 3px;
+                        white-space: nowrap;
+                        display: none;
+                      }
+                      ha-card:hover::after {
+                        display: block;
+                      }
+        styles:
+          grid:
+            - grid-template-areas: '"n btn" "s btn" "i btn"'
+            - grid-template-columns: 1fr min-content
+            - grid-template-rows: min-content min-content 1fr
+          img_cell:
+            - justify-content: start
+            - position: absolute
+            - width: 130px
+            - height: 130px
+            - left: 0
+            - bottom: 0
+            - margin: 0 0 -30px -30px
+            - background: var(--blue)
+            - border-radius: 200px
+          icon:
+            - width: 60px
+            - color: black
+            - opacity: '0.6'
+          card:
+            - padding: 22px 8px 22px 22px
+          name:
+            - justify-self: start
+            - align-self: start
+            - font-size: 16px
+            - font-weight: 500
+            - color: contrast20
+          state:
+            - min-height: 80px
+            - justify-self: start
+            - align-self: start
+            - font-size: 14px
+            - opacity: '0.7'
+          custom_field:
+            btn:
+              - justify-content: end
+              - align-self: start
+      - type: custom:button-card
+        entity: switch.pool_switch
+        name: Pompe Piscine
+        icon: mdi:water-boiler
+        tap_action:
+          action: toggle
+        state:
+          - value: 'off'
+            icon: mdi:water-boiler-off
+            styles:
+              card:
+                - background: var(--red)
+              icon:
+                - color: var(--contrast1)
+              name:
+                - color: var(--contrast1)
+              custom_fields:
+                state:
+                  - color: var(--contrast1)
+        styles:
+          grid:
+            - grid-template-areas: '"i i" "n n" "state icon"'
+            - grid-template-columns: 1fr 1fr
+            - grid-template-rows: 1fr min-content min-content
+          card:
+            - padding: 20px
+            - background: var(--green)
+            - height: 100%
+          name:
+            - justify-self: start
+            - font-size: 14px
+            - color: var(--black1)
+            - opacity: '0.7'
+            - padding: 2px 0px
+          icon:
+            - width: 24px
+            - color: var(--black1)
+          img_cell:
+            - justify-self: start
+            - width: 24px
+            - height: 24px
+            - padding-bottom: 18px
+          custom_fields:
+            icon:
+              - justify-self: end
+              - margin-top: '-9px'
+            state:
+              - justify-self: start
+              - font-size: 16px
+              - font-weight: 500
+              - margin-top: '-9px'
+              - color: var(--black1)
+        custom_fields:
+          icon: |
+            [[[
+              var state = entity.state;
+              if (state == "on")
+                return '<ha-icon icon="mdi:toggle-switch" style="color: var(--contrast1); width: 50px; height: 50px">'
+              else
+                return '<ha-icon icon="mdi:toggle-switch-off" style="color: var(--contrast1); width: 50px; height: 50px">'
+            ]]]
+          state: |
+            [[[
+              var state = entity.state;
+              if(state == "on")
+                return `On`
+              else
+                return 'Off'
+            ]]]
+    columns: 2
+  - type: custom:button-card
+    entity: sensor.pool_elapsed_filtration_duration
+    name: Filtration
+    icon: mdi:water-boiler
+    action: more-info
+    styles:
+      card:
+        - padding: 20px
+        - height: 140px
+      grid:
+        - grid-template-areas: '"i recommanded" "n stat2" "bar bar" "stat1 stat3"'
+        - grid-template-columns: 1fr 1fr
+        - grid-template-rows: 50px min-content 30px min-content
+      name:
+        - justify-self: start
+        - font-size: 14px
+        - opacity: 0.7
+      icon:
+        - width: 24px
+      img_cell:
+        - justify-self: start
+        - align-self: start
+        - width: 34px
+        - height: 34px
+      custom_fields:
+        recommanded:
+          - justify-self: end
+          - align-self: center
+          - padding-bottom: 6px
+          - font-size: 12px
+          - font-weight: 500
+        stat1:
+          - justify-self: start
+          - font-size: 10px
+          - opacity: 0.7
+        stat2:
+          - justify-self: end
+          - font-size: 12px
+          - opacity: 0.7
+          - font-weight: 500
+        stat3:
+          - justify-self: end
+          - font-size: 10px
+          - opacity: 0.7
+        bar:
+          - justify-self: start
+          - margin-top: '-4px'
+          - width: 100%
+          - border-radius: 6px
+          - background: var(--contrast5)
+          - height: 12px
+    custom_fields:
+      recommanded: |
+        [[[
+          var iopool_recommanded = states['sensor.recommanded_filtration_iopool_pool'].state;
+          return "Recommandation iopool: " + new Date(iopool_recommanded * 60 * 1000).toISOString().substr(11, 8);
+        ]]]
+      bar: |
+        [[[
+          var duration = states['sensor.pool_pump_calculated_duration'].state;
+          var elapsed = Math.round(entity.state * 60, 2);
+          var elapsed_percent = Math.round(Math.min(100,((elapsed/duration)*100)),2);
+          return `<div> <div style="background: var(--blue); height: 12px; width: ${elapsed_percent}%"></div> </div>`
+        ]]]
+      stat1: '00:00:00'
+      stat2: |
+        [[[
+          var duration = states['sensor.pool_pump_calculated_duration'].state;
+          var elapsed = Math.round(entity.state * 60, 2);
+          var elapsed_percent = Math.round(((elapsed/duration)*100),2);
+          return "Effectuée: " + new Date(elapsed * 60 * 1000).toISOString().substr(11,8) + " / " + elapsed_percent + "%";
+        ]]]
+      stat3: >
+        [[[return new Date(states['sensor.pool_pump_calculated_duration'].state
+        * 60 * 1000).toISOString().substr(11, 8); ]]]
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: input_select.pool_mode
+        state: Standard
+    card:
+      type: custom:button-card
+      entity: timer.pool_boost
+      name: Boost
+      icon: mdi:plus-box-multiple
+      action: more-info
+      state:
+        - value: idle
+          styles:
+            custom_fields:
+              name:
+                - display: none
+              bar:
+                - display: none
+              stat1:
+                - display: none
+              stat2:
+                - display: none
+              stat3:
+                - display: none
+        - value: active
+          styles:
+            card:
+              - background: var(--green)
+            name:
+              - color: var(--black1)
+            icon:
+              - color: var(--black1)
+      styles:
+        card:
+          - padding: 20px
+        grid:
+          - grid-template-areas: '"i btn" "n stat2" "bar bar" "stat1 stat3"'
+          - grid-template-columns: 1fr 4fr
+          - grid-template-rows: min-content min-content 30px min-content
+        name:
+          - justify-self: start
+          - padding-top: 10px
+          - font-size: 14px
+          - opacity: 0.7
+          - color: var(--contrast20)
+        icon:
+          - width: 24px
+          - color: var(--contrast20)
+        img_cell:
+          - justify-self: start
+          - align-self: start
+          - width: 34px
+          - height: 34px
+        custom_fields:
+          btn:
+            - justify-self: end
+            - align-self: start
+          stat1:
+            - justify-self: start
+            - font-size: 10px
+            - opacity: 0.7
+            - color: var(--black1)
+          stat2:
+            - justify-self: end
+            - padding-top: 10px
+            - font-size: 12px
+            - opacity: 0.7
+            - font-weight: 500
+            - color: var(--black1)
+          stat3:
+            - justify-self: end
+            - font-size: 10px
+            - opacity: 0.7
+            - color: var(--black1)
+          bar:
+            - justify-self: start
+            - margin-top: '-4px'
+            - width: 100%
+            - border-radius: 6px
+            - background: var(--contrast5)
+            - height: 12px
+      custom_fields:
+        btn:
+          card:
+            type: custom:mushroom-chips-card
+            chips:
+              - type: template
+                tap_action:
+                  action: call-service
+                  service: input_select.select_option
+                  target:
+                    entity_id: input_select.pool_boost_selector
+                  data:
+                    option: None
+                hold_action:
+                  action: none
+                double_tap_action:
+                  action: none
+                icon: mdi:timer-stop
+                entity: input_select.pool_boost_selector
+                card_mod:
+                  style: |
+                    ha-card {
+                      --chip-background: {{ 'var(--green)' if is_state('input_select.pool_boost_selector', 'None') else 'var(--contrast4)' }};
+                      --chip-box-shadow: {{ 'inset 0 0 0 2px var(--white1)' if is_state('input_select.pool_boost_selector', 'None') else 'none' }};
+                      padding: 5px!important;
+                      border-radius: 100px!important;
+                    }
+                    ha-card::after {
+                      content: "Arrêt du boost";
+                      position: absolute;
+                      bottom: 10%;
+                      left: 10%;
+                      transform: translateX(-100%);
+                      background-color: var(--contrast1);
+                      color: var(--contrast10);
+                      font-size: 14px;
+                      padding: 5px;
+                      border-radius: 3px;
+                      white-space: nowrap;
+                      display: none;
+                    }
+                    ha-card:hover::after {
+                      display: block;
+                    }
+              - type: template
+                tap_action:
+                  action: call-service
+                  service: input_select.select_option
+                  target:
+                    entity_id: input_select.pool_boost_selector
+                  data:
+                    option: 1H
+                hold_action:
+                  action: none
+                double_tap_action:
+                  action: none
+                icon: mdi:numeric-1
+                entity: input_select.pool_boost_selector
+                card_mod:
+                  style: |
+                    ha-card {
+                      --chip-background: {{ 'var(--green)' if is_state('input_select.pool_boost_selector', '1H') else 'var(--contrast4)' }};
+                      --chip-box-shadow: {{ 'inset 0 0 0 2px var(--white1)' if is_state('input_select.pool_boost_selector', '1H') else 'none' }};
+                      padding: 5px!important;
+                      border-radius: 100px!important;
+                    }
+                    ha-card::after {
+                      content: "Boost 1H";
+                      position: absolute;
+                      bottom: 10%;
+                      left: 10%;
+                      transform: translateX(-100%);
+                      background-color: var(--contrast1);
+                      color: var(--contrast10);
+                      font-size: 14px;
+                      padding: 5px;
+                      border-radius: 3px;
+                      white-space: nowrap;
+                      display: none;
+                    }
+                    ha-card:hover::after {
+                      display: block;
+                    }
+              - type: template
+                tap_action:
+                  action: call-service
+                  service: input_select.select_option
+                  target:
+                    entity_id: input_select.pool_boost_selector
+                  data:
+                    option: 4H
+                hold_action:
+                  action: none
+                double_tap_action:
+                  action: none
+                icon: mdi:numeric-4
+                entity: input_select.pool_boost_selector
+                card_mod:
+                  style: |
+                    ha-card {
+                      --chip-background: {{ 'var(--green)' if is_state('input_select.pool_boost_selector', '4H') else 'var(--contrast4)' }};
+                      --chip-box-shadow: {{ 'inset 0 0 0 2px var(--white1)' if is_state('input_select.pool_boost_selector', '4H') else 'none' }};
+                      padding: 5px!important;
+                      border-radius: 100px!important;
+                    }
+                    ha-card::after {
+                      content: "Boost 4H";
+                      position: absolute;
+                      bottom: 10%;
+                      left: 10%;
+                      transform: translateX(-100%);
+                      background-color: var(--contrast1);
+                      color: var(--contrast10);
+                      font-size: 14px;
+                      padding: 5px;
+                      border-radius: 3px;
+                      white-space: nowrap;
+                      display: none;
+                    }
+                    ha-card:hover::after {
+                      display: block;
+                    }
+              - type: template
+                tap_action:
+                  action: call-service
+                  service: input_select.select_option
+                  target:
+                    entity_id: input_select.pool_boost_selector
+                  data:
+                    option: 8H
+                hold_action:
+                  action: none
+                double_tap_action:
+                  action: none
+                icon: mdi:numeric-8
+                entity: input_select.pool_boost_selector
+                card_mod:
+                  style: |
+                    ha-card {
+                      --chip-background: {{ 'var(--green)' if is_state('input_select.pool_boost_selector', '8H') else 'var(--contrast4)' }};
+                      --chip-box-shadow: {{ 'inset 0 0 0 2px var(--white1)' if is_state('input_select.pool_boost_selector', '8H') else 'none' }};
+                      padding: 5px!important;
+                      border-radius: 100px!important;
+                    }
+                    ha-card::after {
+                      content: "Boost 8H";
+                      position: absolute;
+                      bottom: 10%;
+                      left: 10%;
+                      transform: translateX(-100%);
+                      background-color: var(--contrast1);
+                      color: var(--contrast10);
+                      font-size: 14px;
+                      padding: 5px;
+                      border-radius: 3px;
+                      white-space: nowrap;
+                      display: none;
+                    }
+                    ha-card:hover::after {
+                      display: block;
+                    }
+              - type: template
+                tap_action:
+                  action: call-service
+                  service: input_select.select_option
+                  target:
+                    entity_id: input_select.pool_boost_selector
+                  data:
+                    option: 24H
+                hold_action:
+                  action: none
+                double_tap_action:
+                  action: none
+                icon: mdi:hours-24
+                entity: input_select.pool_boost_selector
+                card_mod:
+                  style: |
+                    ha-card {
+                      --chip-background: {{ 'var(--green)' if is_state('input_select.pool_boost_selector', '24H') else 'var(--contrast4)' }};
+                      --chip-box-shadow: {{ 'inset 0 0 0 2px var(--contrast1)' if is_state('input_select.pool_boost_selector', '24H') else 'none' }};
+                      padding: 5px!important;
+                      border-radius: 100px!important;
+                    }
+                    ha-card::after {
+                      content: "Boost 24H";
+                      position: absolute;
+                      bottom: 10%;
+                      left: 10%;
+                      transform: translateX(-100%);
+                      background-color: var(--contrast1);
+                      color: var(--contrast10);
+                      font-size: 14px;
+                      padding: 5px;
+                      border-radius: 3px;
+                      white-space: nowrap;
+                      display: none;
+                    }
+                    ha-card:hover::after {
+                      display: block;
+                    }
+        bar: |
+          [[[
+            if (entity.state == "active") {
+              var duration = entity.attributes.duration;
+              var durationSeconds = duration.split(':').reduce((acc, time) => (60 * acc) + +time, 0);
+              var finishesAt = entity.attributes.finishes_at;
+              var now = new Date();
+              var remainingSeconds = Math.floor((new Date(finishesAt).getTime() - now.getTime()) / 1000);
+              var remainingPercent = Math.round(((remainingSeconds/durationSeconds)*100),2);
+              return `<div> <div style="background: var(--blue); height: 12px; width: ${remainingPercent}%"></div> </div>`
+            }
+          ]]]
+        stat1: '00:00:00'
+        stat2: |
+          [[[
+            if (entity.state == "active") {
+              var finishesAt = entity.attributes.finishes_at;
+              var now = new Date();
+              var remainingSeconds = Math.floor((new Date(finishesAt).getTime() - now.getTime()) / 1000);
+              return new Date(remainingSeconds * 1000).toISOString().substr(11, 8);
+            }
+          ]]]
+        stat3: |
+          [[[
+            return entity.attributes.duration
+          ]]]
+  - type: conditional
+    conditions:
+      - entity: sensor.mode_iopool_pool
+        state: STANDARD
+    card:
+      type: custom:vertical-stack-in-card
+      cards:
+        - type: custom:mini-graph-card
+          entities:
+            - entity: sensor.temperature_iopool_pool
+              name: Température du bassin
+          hours_to_show: 96
+          animate: true
+          line_width: 5
+          group_by: hour
+          state_adaptive_color: true
+          hour24: true
+          decimals: 1
+          show:
+            extrema: true
+            average: true
+            labels: false
+          color_thresholds:
+            - value: 20
+              color: '#44739e'
+            - value: 24
+              color: '#12f33f'
+            - value: 30
+              color: '#f39c12'
+            - value: 32
+              color: '#c0392b'
+        - type: custom:pool-monitor-card
+          title: Analyse de l'eau
+          temperature: sensor.temperature_iopool_pool
+          temperature_setpoint: 27
+          temperature_step: 4
+          ph: sensor.ph_iopool_pool
+          ph_setpoint: 7.4
+          ph_step: 0.3
+          orp: sensor.orp_iopool_pool
+          orp_setpoint: 725
+          orp_step: 75
+          show_labels: true
+          language: fr
 ```
 
 ![example of card composition](dashboard_screenshot.png)
 
 Several types of cards are used and necessary to compose this card:
 
+- [Button-Card](https://github.com/custom-cards/button-card)
 - [Mushroom](https://github.com/piitaya/lovelace-mushroom)
+- [Card Mod](https://github.com/thomasloven/lovelace-card-mod)
 - [Vertical Stack in Card](https://github.com/ofekashery/vertical-stack-in-card)
 - [Mini Graph Card](https://github.com/kalkih/mini-graph-card)
 - [Pool Monitor Card](https://github.com/wilsto/pool-monitor-card)
+
+> [!NOTE]
+>
+> I use the [Rounded Theme](https://community.home-assistant.io/t/rounded-dashboard-guide) who include some colors.
+> You will need to adjust colors using format `var(--XXXX)` with a specific color or colors used in your theme.
