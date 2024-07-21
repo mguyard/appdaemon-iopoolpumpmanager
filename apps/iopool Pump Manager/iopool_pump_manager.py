@@ -113,7 +113,14 @@ class iopoolPumpManager(hass.Hass):
                             config=config,
                         )
 
-                    # Listen change in boost selector (input_select entity)
+                    # Listen change of iopool filtration duration recommanded
+                    if config.filtration_summer.recommanded_duration is not None:
+                        # Calculate and set the calculated duration for the day
+                        self.listen_state(
+                            callback=self._recommanded_duration_change,
+                            entity_id=config.filtration_summer.recommanded_duration,
+                            config=config,
+                        )
 
                     self.log(f"Standard mode - {len(self.standard_handlers)} handlers created", level="INFO")
                     self.log(f"List of handlers : {self.standard_handlers}", level="INFO")
@@ -142,6 +149,66 @@ class iopoolPumpManager(hass.Hass):
             self.listen_state(callback=self._callback_pool_mode_change, entity_id=config.filtration_mode)
 
         self.log(f"{self.name} fully Initialized !", level="INFO")
+
+    def _recommanded_duration_change(self, entity: str, attribute: str, old: str, new: str, **kwargs: dict) -> None:
+        # If the recommanded duration change, we need to check if the calculated duration need to be updated
+        actual_calculated_duration = int(
+            self.get_state(entity_id=self._get_calculated_duration_entity(poolname=kwargs["config"].pool_name))
+        )
+        new_calculated_duration = int(self._get_standard_day_filtration_duration(config=kwargs["config"]))
+        if actual_calculated_duration != new_calculated_duration:
+            self.log(
+                f"Filtration duration changed from {actual_calculated_duration} minutes "
+                f"to {new_calculated_duration} minutes."
+                "Reloading configuration...",
+                level="INFO",
+            )
+            # Check if the pump is running and now is between start and end time of one or multiple slots
+            between_slots, slots_name = self._between_slots_start_end(config=kwargs["config"])
+            if self.get_state(entity_id=kwargs["config"].pump_switch) == "on" and between_slots:
+                self.log(
+                    f"Pool Pump '{kwargs['config'].pump_switch}' is running and "
+                    f"during slot '{kwargs['config'].filtration_summer.slots.root[slots_name[0]].name}'",
+                    level="DEBUG",
+                )
+                # If the new calculated duration is greater than the actual calculated duration,
+                # we can reload the app directly
+                if actual_calculated_duration < new_calculated_duration:
+                    self.log(
+                        "New calculated duration is greater than actual calculated duration. We can reload",
+                        level="DEBUG",
+                    )
+                    self.restart_app(self.name)
+                else:
+                    self.log("New calculated duration is less than actual calculated duration", level="DEBUG")
+                    # If the new calculated duration is less than the actual calculated duration
+                    # We need to check if the new end time of slot is in the past, in this case
+                    # we need to stop the pump before reloading app also pump will not stop before end of next slot
+                    new_slot_endtime = self._get_slot_endtime(
+                        slot_name=slots_name[0],
+                        slot_config=vars(kwargs["config"].filtration_summer.slots.root[slots_name[0]]),
+                        config=kwargs["config"],
+                    )
+                    self.log(
+                        f"New end time of slot ({new_slot_endtime}) is in the past. "
+                        "We stopping poolpump before reloading app",
+                        level="INFO",
+                    )
+                    if new_slot_endtime < datetime.now().time():
+                        self._stop_pump(config=kwargs["config"])
+                        self.restart_app(self.name)
+            else:
+                self.log(
+                    f"Pool Pump {kwargs['config'].pump_switch} is not running or now isn't during a slot", level="DEBUG"
+                )
+                self.restart_app(self.name)
+        else:
+            self.log(
+                f"iopool Recommanded duration changed from {old}mn to {new}mn but "
+                f"calculated duration ({actual_calculated_duration}mn) don't change."
+                "No action will be executed.",
+                level="INFO",
+            )
 
     def _get_calculated_duration_entity(self, poolname: str | None) -> str:
         """
@@ -462,16 +529,17 @@ class iopoolPumpManager(hass.Hass):
 
     def _between_slots_start_end(self, config: ConfigValidator.Config) -> bool:
         """
-        Checking if now is between the start and end time of all slot declared.
-        Based on handlers created.
+        Checks if the current time is between the start and end times of any slot in the given configuration.
 
         Args:
-            config (ConfigValidator.Config): The configuration object.
+            config (ConfigValidator.Config): The configuration object containing the slot information.
 
         Returns:
-            bool: True if there are multiple slots with both start and end timers running, False otherwise.
+            Tuple[bool, List[str]]: A tuple containing a boolean value indicating whether the current time is between
+            any slot's start and end times, and a list of slot names for which the condition is true.
         """
         count = 0
+        in_slots = []
         for slot_name, _ in config.filtration_summer.slots.dict().items():
             handler_start_time = None
             handler_end_time = None
@@ -510,17 +578,18 @@ class iopoolPumpManager(hass.Hass):
                 is_between = False
 
             self.log(
-                f"Now is between : {is_between}",
+                f"Now is between {slot_name}: {is_between}",
                 level="DEBUG",
             )
             # If now is between start and end time of the slot, we increment the count
             if is_between:
+                in_slots.append(slot_name)
                 count += 1
         # If count is greater than 1, it means that now is between start and end time of one or multiple slots
         if count > 0:
-            return True
+            return True, in_slots
         else:
-            return False
+            return False, in_slots
 
     def _start_pump(self, config: ConfigValidator.Config) -> None:
         """
@@ -749,7 +818,8 @@ class iopoolPumpManager(hass.Hass):
                     self.log("Dryrun mode - Timer Cancel action will not be executed.", level="INFO")
 
             # Check if the boost ended during a normal filtration slot
-            if self._between_slots_start_end(config=kwargs["config"]):
+            between_slots, _ = self._between_slots_start_end(config=kwargs["config"])
+            if between_slots:
                 self.log("Boost ended during normal filtration slot. No action will be executed.", level="INFO")
             else:
                 self.log("Stop filtration following the boost selector change", level="INFO")
