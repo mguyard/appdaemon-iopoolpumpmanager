@@ -1,3 +1,10 @@
+## [2.0.1-beta.1](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v2.0.0...v2.0.1-beta.1) (2024-07-21)
+
+
+### Bug Fixes
+
+* iopool recommanded_duration was not read at each change, due to that, calculated duration and all handlers wasn't updated. Now in this release, each iopool recommanded_duration is tracked and app is reload to ajust handler. In case filtration is running and during a slot, app analyze if new end time of slot is in past to stop filtration before reloading app to avoid poolpump to stop only on the end of next slot (too many filtration not needed) ([cfd1094](https://github.com/mguyard/appdaemon-iopoolpumpmanager/commit/cfd109462d768e9e597a74997223180ba72d7a79))
+
 # [2.0.0](https://github.com/mguyard/appdaemon-iopoolpumpmanager/compare/v1.0.7...v2.0.0) (2024-06-21)
 
 
