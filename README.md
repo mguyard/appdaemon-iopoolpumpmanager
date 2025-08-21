@@ -1,3 +1,8 @@
+> [!WARNING]
+> iopool Pump Manager is now deprecated and has been superseded by the [iopool integration](https://github.com/mguyard/hass-iopool).
+> 
+> If you are interested in continuing development, feel free to fork this repository. The code will remain available here, but it will no longer receive updates or maintenance.
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/mguyard/appdaemon-iopoolpumpmanager/main/docs/logo.png" width="400" />
 </p>
